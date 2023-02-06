@@ -25,10 +25,9 @@ public class EmployeeService {
         return employeeRepository
                 .findById(id)
                 .map(employee1 -> {
-                  //mapped incoming data with this object
-                  return employee1;
-                }).flatMap(employee1 -> employeeRepository.save(employee1))
-                .flatMap(e -> Mono.just(e));
+                  return new Employee(employee.id(), employee.name(), employee.address(), employee.designation(), employee.salary(), employee.doj(), employee.department());
+                })
+                .flatMap(updateEmployee -> employeeRepository.save(updateEmployee));
     }
 
     public Mono<Void> delete(long id) {
