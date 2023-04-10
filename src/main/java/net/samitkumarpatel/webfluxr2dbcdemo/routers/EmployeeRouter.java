@@ -12,7 +12,7 @@ public class EmployeeRouter {
     public RouterFunction route(EmployeeHandler employeeHandler) {
         return RouterFunctions.route()
                 .path("/employee", builder -> builder
-                        .GET("/all", employeeHandler::all)
+                        .GET("", employeeHandler::all)
                         .GET("/{id}", employeeHandler::getById)
                         .POST("", employeeHandler::save)
                         .PUT("/{id}", employeeHandler::update)

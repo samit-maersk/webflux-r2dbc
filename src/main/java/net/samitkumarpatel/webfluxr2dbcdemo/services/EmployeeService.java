@@ -9,6 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
+
+import static java.util.Objects.isNull;
+
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
@@ -18,17 +22,19 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
     public Mono<Employee> getById(long id) {
-        return employeeRepository.findById(id);
+        return employeeRepository
+                .findById(id)
+                .flatMap(e -> isNull(e) ? Mono.empty(): Mono.just(e))
+                .switchIfEmpty(Mono.error(new NotFoundException(String.format("data not found with id %s", id))));
     }
 
     public Mono<Employee> update(long id, Employee employee) {
         return employeeRepository
                 .findById(id)
-                .map(employee1 -> {
-                  //mapped incoming data with this object
-                  return employee1;
-                }).flatMap(employee1 -> employeeRepository.save(employee1))
-                .flatMap(e -> Mono.just(e));
+                .flatMap(e -> isNull(e) ? Mono.empty(): Mono.just(e))
+                .switchIfEmpty(Mono.error(new NotFoundException(String.format("data not found with id %s for update", id))))
+                .map(employee1 -> new Employee(id, employee.name(), employee.address(), employee.designation(), employee.salary(), employee.doj(), employee.department()))
+                .flatMap(updatedEmployee -> employeeRepository.save(updatedEmployee));
     }
 
     public Mono<Void> delete(long id) {
