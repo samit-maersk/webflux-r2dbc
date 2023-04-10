@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>net.samitkumarpatel</groupId>
-	<artifactId>webflux-r2dbc-demo</artifactId>
+	<artifactId>webflux-r2dbc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>webflux-r2dbc-demo</name>
+	<name>webflux-r2dbc</name>
 	<description>Webflux with r2dbc</description>
 	<properties>
 		<java.version>17</java.version>
