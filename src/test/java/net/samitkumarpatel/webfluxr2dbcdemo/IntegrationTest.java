@@ -25,13 +25,12 @@ public class IntegrationTest {
     ApplicationContext applicationContext;
     @Container
     public static PostgreSQLContainer psql = new PostgreSQLContainer<>("postgres:14.1-alpine")
-            .withExposedPorts(5432)
             .withCopyFileToContainer(MountableFile.forClasspathResource("schema.sql"), "/docker-entrypoint-initdb.d/schema.sql");
 
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
         //TODO It has to be implement like this - https://www.testcontainers.org/modules/databases/r2dbc/ can be applied below
-        var r2dbcHost = String.format("r2dbc:postgresql://%s:%s/%s", psql.getHost(), psql.getExposedPorts().get(0), psql.getDatabaseName());
+        var r2dbcHost = String.format("r2dbc:postgresql://%s:%s/%s", /*psql.getHost()*/"127.0.0.1", psql.getFirstMappedPort(), psql.getDatabaseName());
         System.out.println(r2dbcHost);
 
         registry.add("spring.r2dbc.url", () -> r2dbcHost);
