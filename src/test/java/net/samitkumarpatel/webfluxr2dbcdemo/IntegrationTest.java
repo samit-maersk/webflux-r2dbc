@@ -1,5 +1,6 @@
 package net.samitkumarpatel.webfluxr2dbcdemo;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,9 +10,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.MountableFile;
 
 @Testcontainers
 @SpringBootTest
@@ -21,13 +24,14 @@ public class IntegrationTest {
     @Autowired
     ApplicationContext applicationContext;
     @Container
-    public static PostgreSQLContainer psql = new PostgreSQLContainer("postgres:14.1-alpine" );
+    public static PostgreSQLContainer psql = new PostgreSQLContainer<>("postgres:14.1-alpine")
+            .withExposedPorts(5432)
+            .withCopyFileToContainer(MountableFile.forClasspathResource("schema.sql"), "/docker-entrypoint-initdb.d/schema.sql");
 
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
-        //TODO a tweak https://www.testcontainers.org/modules/databases/r2dbc/ can be applied below
-        //spring.r2dbc.url=r2dbc:tc:mysql:///databasename?TC_IMAGE_TAG=8
-        var r2dbcHost = String.format("r2dbc:postgresql://%s:%s/postgres", psql.getHost(), psql.getFirstMappedPort());
+        //TODO It has to be implement like this - https://www.testcontainers.org/modules/databases/r2dbc/ can be applied below
+        var r2dbcHost = String.format("r2dbc:postgresql://%s:%s/%s", psql.getHost(), psql.getExposedPorts().get(0), psql.getDatabaseName());
         System.out.println(r2dbcHost);
 
         registry.add("spring.r2dbc.url", () -> r2dbcHost);
