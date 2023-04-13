@@ -29,7 +29,7 @@ public class WebfluxR2dbcDemoApplication {
         .map(User.class::cast)
         .map(User::getUsername);
 		* */
-		return () -> Mono.just(new User("1", "Samit").name());
+		return () -> Mono.just(new User("1", System.getenv("LOGNAME")).name());
 	}
 
 }
