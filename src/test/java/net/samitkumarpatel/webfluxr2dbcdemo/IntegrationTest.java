@@ -1,12 +1,12 @@
 package net.samitkumarpatel.webfluxr2dbcdemo;
 
 import net.samitkumarpatel.webfluxr2dbcdemo.models.Employee;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
@@ -24,6 +23,7 @@ import org.testcontainers.utility.MountableFile;
 
 @Testcontainers
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class IntegrationTest {
 
     WebTestClient webTestClient;
@@ -53,7 +53,7 @@ public class IntegrationTest {
     @Test
     @DisplayName("/employee POST")
     @Order(1)
-    void add() {
+    void postTest() {
         webTestClient
                 .post()
                 .uri("/employee")
@@ -76,7 +76,7 @@ public class IntegrationTest {
     @Test
     @DisplayName("/employee GET/all")
     @Order(2)
-    void fetchAll() {
+    void fetchAllTest() {
         webTestClient
                 .get()
                 .uri("/employee")
@@ -90,7 +90,7 @@ public class IntegrationTest {
     @Test
     @DisplayName("/employee GET/one")
     @Order(3)
-    void fetchOne() {
+    void fetchOneTest() {
         webTestClient
                 .get()
                 .uri("/employee/1")
@@ -114,8 +114,7 @@ public class IntegrationTest {
     @Test
     @DisplayName("/employee PUT")
     @Order(4)
-    @Disabled
-    void update() {
+    void putTest() {
         webTestClient
                 .put()
                 .uri("/employee/1")
@@ -146,5 +145,17 @@ public class IntegrationTest {
                         "department" : "IT"
                     }
                 """);
+    }
+
+    @Test
+    @DisplayName("/employee DELETE")
+    @Order(5)
+    void deleteTest() {
+        webTestClient
+                .get()
+                .uri("/employee/1")
+                .exchange()
+                .expectStatus()
+                .isOk();
     }
 }
