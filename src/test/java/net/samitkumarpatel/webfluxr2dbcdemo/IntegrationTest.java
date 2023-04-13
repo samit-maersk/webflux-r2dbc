@@ -121,13 +121,7 @@ public class IntegrationTest {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .bodyValue("""
                         {
-                            "id": 1,
-                            "name" : "User One Changed",
-                            "address" : "WD",
-                            "designation" : "Manager",
-                            "salary" : 5400.60,
-                            "doj": "2023-06-04",
-                            "department" : "IT"
+                            "name" : "Changed"
                         }
                         """)
                 .exchange()
@@ -137,7 +131,7 @@ public class IntegrationTest {
                 .json("""
                     {
                         "id": 1,
-                        "name" : "User One Changed",
+                        "name" : "Changed",
                         "address" : "WD",
                         "designation" : "Manager",
                         "salary" : 5400.60,
