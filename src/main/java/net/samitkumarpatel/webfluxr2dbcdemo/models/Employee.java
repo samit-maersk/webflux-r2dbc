@@ -9,7 +9,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public record Employee(
         @Id Long id,
@@ -21,6 +20,7 @@ public record Employee(
         LocalDate doj,
         String department,
 
+        //TODO can we take this to a different class?
         @CreatedBy
         @Column("created_by")
         String createdBy,

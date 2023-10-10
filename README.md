@@ -3,8 +3,8 @@
 
 - Start postgres db
 ```shell
-docker compose -f postgres.yml up -d
-docker compose -f postgres.yml down
+docker compose -f compose.yml up -d
+docker compose -f compose.yml down
 ```
 
 ## Helpful Guide
